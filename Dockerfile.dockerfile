@@ -1,21 +1,21 @@
 # Starts from the python 3.10 official docker image
-FROM python:3.10
+FROM python:3.10-slim
 
 # Create a folder "app" at the root of the image
 RUN mkdir /app
 
-# Define /app as the working directory
+# set workdir
 WORKDIR /app
 
-# Copy all the files in the current directory in /app
+# copy requirements and code
+COPY requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . /app
 
-# Update pip
-RUN pip install --upgrade pip
+# Expose port for Streamlit (8501) and FastAPI (8000) — choose one when running
+EXPOSE 8501
+EXPOSE 8000
 
-# Install dependencies from "requirements.txt"
-RUN pip install -r requirements.txt
-
-# Run the app
-# Set host to 0.0.0.0 to make it run on the container's network
-CMD uvicorn app:app --host 0.0.0.0
+# Default command - start Streamlit app
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
