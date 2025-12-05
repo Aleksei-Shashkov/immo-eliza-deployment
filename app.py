@@ -69,7 +69,6 @@ with st.form("predict_form"):
         garden = st.checkbox("Garden", value=False)
         swimming_pool = st.checkbox("Swimming pool", value=False)
 
-    st.text_input("Enter value:")
     submit = st.form_submit_button("Predict price")
 
 ########################################################################################################
