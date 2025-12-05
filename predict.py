@@ -15,7 +15,7 @@ scaler = joblib.load(SCALER_PATH)
 PROPERTY_MAP = {
     "Apartment": ["Apartment", "Duplex", "Ground floor", "Loft", "Penthouse", "Studio", "Triplex"],
     "House": ["Bungalow", "Chalet", "Cottage", "Mansion", "Master house", "Mixed building", "Residence", "Villa"]
-}
+    }
 
 # 3. Предобработка входных данных в формат DataFrame для модели
 def preprocess(data: dict) -> pd.DataFrame:
