@@ -2,35 +2,64 @@ import streamlit as st
 from predict import predict, PROPERTY_MAP
 from typing import Dict
 
-st.set_page_config(page_title="Real Estate Price Predictor", layout="centered")
+st.set_page_config(page_title="Immo Eliza Price Predictor", layout="centered")
 
-st.title("🏠 Real Estate Price Predictor")
+st.title("🏠 Immo Eliza Price Predictor")
 
 with st.form("predict_form"):
-    province = st.selectbox("Province", [
-        "Antwerp", "Brabant-Wallon", "Brussels", "East-Flanders", "Flemish-Brabant",
-        "Hainaut", "Limburg", "Luik", "Luxembourg", "Namur", "West-Flanders"
-    ])
 
-    postalcode = st.number_input("Postal Code", min_value=1000, max_value=9999, value=1000, step=1)
-    ptype = st.selectbox("Type of Property", ["apartment", "house"])
-    subtype = st.selectbox("Subtype", PROPERTY_MAP[ptype])
+    province = st.selectbox(
+        "Province",
+        [
+            "Antwerp", "Brabant-Wallon", "Brussels", "East-Flanders", "Flemish-Brabant",
+            "Hainaut", "Limburg", "Luik", "Luxembourg", "Namur", "West-Flanders"
+        ]
+    )
 
+    postalcode = st.number_input(
+        "Postal Code",
+        min_value=1000,
+        max_value=9999,
+        value=1000,
+        step=1
+    )
+
+    # Type → SubType
     col1, col2 = st.columns(2)
     with col1:
-        bedrooms = st.number_input("Bedrooms", min_value=0, value=1)
+        ptype = st.radio("Type of Property",options=list(PROPERTY_MAP.keys()),horizontal=True)
     with col2:
-        living_area = st.number_input("Living area (m²)", min_value=10, value=50)
+        subtype = st.selectbox("Subtype",options=PROPERTY_MAP[ptype])
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        bedrooms = st.slider("Bedrooms", min_value=0,max_value=10,value=1,step=1)
+    with col2:
+        living_area = st.slider("Living area (m²)",min_value=10,max_value=500,value=50,step=1)
 
-    st.markdown("Optional features")
-    equiped_kitchen = st.checkbox("Equipped kitchen", value=False)
-    furnished = st.checkbox("Furnished", value=False)
-    terrace = st.checkbox("Terrace", value=False)
-    garden = st.checkbox("Garden", value=False)
-    swimming_pool = st.checkbox("Swimming pool", value=False)
+    st.markdown("### Optional features")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        equiped_kitchen = st.checkbox("Equipped kitchen", value=False)
+        furnished = st.checkbox("Furnished", value=False)
+        terrace = st.checkbox("Terrace", value=False)
+
+    with col2:
+        garden = st.checkbox("Garden", value=False)
+        swimming_pool = st.checkbox("Swimming pool", value=False)
 
     submit = st.form_submit_button("Predict price")
 
+########################################################################################################
+# https://docs.streamlit.io/deploy
+
+    add_selectbox = st.sidebar.selectbox("I want to sell:",("within a month","within 6 months", "within 1 year", "no urgency"))
+    with st.sidebar:
+        add_radio = st.radio("Choose a payment method",("By credit card", "By cash"))
+
+########################################################################################################
 if submit:
     data = {
         # "province": province,
